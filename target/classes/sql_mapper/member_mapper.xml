@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="Member"> 
+ 	<!-- 회원가입 처리 -->
+ 	<insert id="memberJoin" parameterType="member">
+ 		INSERT INTO MEMBER VALUES(
+ 			#{id}, #{password}, #{name}, #{age}, #{gender}, #{email}
+ 		)
+ 	</insert>
+ 	
+ 	<!-- 로그인처리 -->
+ 	<select id="memberLogin" parameterType="member" resultType="member">
+ 		SELECT * FROM MEMBER WHERE ID=#{id}
+ 	</select>
+ 	
+ 	<!-- 멤버 목록 -->
+ 	<select id="memberList" resultType="member">
+ 		SELECT * FROM MEMBER
+ 	</select>
+ 	
+ 	<!-- 멤버 디테일 memberDetail -->
+ 	<select id="memberDetail" parameterType="member" resultType="member">
+ 		SELECT * FROM MEMBER WHERE ID=#{id}
+ 	</select>
+ 	
+ 	<select id="memberView" parameterType="member" resultType="member">
+ 		SELECT * FROM MEMBER WHERE ID=#{id}
+ 	</select>
+ 	
+ 	<update id="memberModify" parameterType="member">
+ 		UPDATE MEMBER SET NAME=#{name}, AGE=#{age}, EMAIL=#{email} WHERE ID=#{id}
+ 	</update>
+ 	
+ 	<select id="idOverlap" parameterType="member" resultType="String">
+ 		SELECT ID FROM MEMBER WHERE ID=#{id}
+ 	</select>
+ 	
+ 	<!-- 게시판 목록 useGeneratedKeys="true" keyProperty="boardNum"-->
+ 	<select id="boardList" resultType="board">
+ 		SELECT * FROM BOARD ORDER BY BOARDNUM DESC
+ 	</select>
+ 	
+ 	<!-- 게시판 글쓰기 useGeneratedKeys="true" keyProperty="boardNum"-->
+ 	<insert id="boardWrite" parameterType="board" useGeneratedKeys="true" keyProperty="boardNum">
+ 		INSERT INTO BOARD VALUES(BOARD_SEQ.NEXTVAL, #{boardWriter}, #{boardSubject}, #{boardContents}, 
+ 		#{boardPassword}, SYSDATE, 0)
+ 		<selectKey keyProperty="boardNum" resultType="int"  order="AFTER">
+ 			SELECT BOARD_SEQ.CURRVAL FROM DUAL
+ 		</selectKey>
+ 	</insert>	
+ 	
+ 	<!-- 게시판 디테일 -->
+ 	<select id="boardDetail" parameterType="board" resultType="board">
+ 		SELECT * FROM BOARD WHERE BOARDNUM=#{boardNum}
+ 	</select>
+ 	
+ 	<!-- 조회수 -->
+ 	<update id="boardHit" parameterType="board">
+ 		UPDATE BOARD SET BOARDHIT=BOARDHIT+1 WHERE BOARDNUM=#{boardNum}
+ 	</update>
+ 	
+ 	<update id="boardModify" parameterType="board">
+ 		UPDATE BOARD SET BOARDWRITER=#{boardWriter}, BOARDSUBJECT=#{boardSubject}, 
+ 		BOARDCONTENTS=#{boardContents}, 
+ 		BOARDPASSWORD=#{boardPassword} WHERE BOARDNUM=#{boardNum}
+ 	</update>
+ 	
+ 	<select id="boardCnt" resultType="int">
+ 		SELECT COUNT(*) FROM BOARD_PAGING
+ 	</select>
+ 	
+ 	<select id="boardPageList" parameterType="page" resultType="board">
+ 		SELECT BOARD_PAGING.*, BOARD_PAGING.RN FROM BOARD_PAGING WHERE 
+ 		BOARD_PAGING.RN BETWEEN #{startRow} AND #{endRow}
+ 	</select>
+ 	
+ 	<delete id="boardDeleteAjax" parameterType="int">
+ 		DELETE FROM BOARD WHERE BOARDNUM = #{boardNum}
+ 	</delete>
+ 	
+ 	<insert id="boardWriteFile" parameterType="board" useGeneratedKeys="true" keyProperty="boardNum">
+ 		INSERT INTO BOARD VALUES(BOARD_SEQ.NEXTVAL, #{boardWriter}, #{boardSubject}, #{boardContents}, 
+ 		#{boardPassword}, SYSDATE, 0, #{boardFileName} )
+ 		<selectKey keyProperty="boardNum" resultType="int"  order="AFTER">
+ 			SELECT BOARD_SEQ.CURRVAL FROM DUAL
+ 		</selectKey>
+ 	</insert>
+</mapper>
+
+
