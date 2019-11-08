@@ -32,7 +32,7 @@
 			url : "idOverlap", //컨트롤러 주소값
 			data : {"id" : idCheck }, //주소로 가지고 갈 데이터
 			dataType : "text" ,
-			success : function(data) { //통신이 성공했을때 처리구문, 매개변수는 리턴되어서 오는 값이 저장됌
+			success : function(data) { //통신이 성공했을때 처리구문, 매개변수는 리턴되어서 오는 값이 저장된다
 				if(data=="OK"){
 					confirmId.style.color = "#ccc";
 					confirmId.innerHTML = "사용 가능한 아이디입니다.";
